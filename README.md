@@ -1,69 +1,87 @@
-# Blood-bank-management-system
+# 🩸 Blood Bank Management System
+### DBMS Semester Project — Python + Flask + SQLite + Real-Time Visualization
 
-# 🩸 Blood Bank Management System with Dashboard
+---
 
-**Full-Stack Blood Bank Management System** with Real-time Dashboard - Semester Project
+## 📁 Project Structure
 
-Yeh project blood bank ke complete operations ko manage karta hai jaise Donor Management, Blood Stock, Requests, Reports aur Modern Dashboard.
-
-## ✨ Key Features
-
-- Donor Registration & Management
-- Blood Inventory / Stock Management (A+, B+, etc.)
-- Blood Request & Approval System
-- Real-time Dashboard (Stock levels, Requests, Analytics)
-- Donor & Recipient Search
-- Reports & Statistics
-- User Authentication (Admin / Staff)
-- Responsive UI
-
-## 🛠 Tech Stack
-
-- **Backend**: Python + FastAPI (ya Flask/Django — aap batao kya use kiya)
-- **Frontend**: HTML/CSS/JS (ya React)
-- **Database**: PostgreSQL / MySQL / SQLite
-- **Dashboard**: [Streamlit / Chart.js / React / whatever aapne use kiya]
-- **Others**: SQLAlchemy, Jinja2, etc.
-
-*(Yahan apne exact technologies fill kar dena)*
-
-## 🚀 Quick Start
-
-```bash
-# Clone the project
-git clone https://github.com/Tauqeerkhan97/blood-bank-management-system.git
-cd blood-bank-management-system
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Database setup
-# .env file configure karo (Database URL)
-
-# Run the application
-python main.py
-# Ya FastAPI ke case mein:
-uvicorn app.main:app --reload
-
-Project Structure
-textblood-bank-management-system/
-├── app/                  # Main application
-├── dashboard/            # Dashboard files
-├── models/               # Database models
-├── routes/ or views/     # API or Pages
-├── templates/            # HTML templates
-├── static/               # CSS, JS
-├── database/
-├── requirements.txt
+```
+bloodbank/
+├── app.py              ← Main Python backend (Flask + SQLite)
+├── templates/
+│   └── index.html      ← Real-time dashboard (HTML + Chart.js)
+├── bloodbank.db        ← SQLite database (auto-created on run)
 └── README.md
-🎯 Project Highlights
+```
 
-Real-time blood stock monitoring
-User-friendly dashboard with charts
-Complete CRUD operations
-Semester Final Year Project
+---
 
+## ⚙️ Setup & Run
 
-Made with ❤️ by Muhammad Tauqeer
-Backend Developer | AI & Full-Stack Enthusiast
-🔗 Portfolio: https://my-portfolio-theta-wine-24.vercel.app
+### Step 1 — Install Python dependencies
+```bash
+pip install flask
+```
+
+### Step 2 — Run the server
+```bash
+python app.py
+```
+
+### Step 3 — Open in browser
+```
+http://127.0.0.1:5000
+```
+
+### Step 4 — Click START
+The simulation runs automatically, step by step!
+
+---
+
+## 🗂️ Database Tables
+
+| Table | Description |
+|-------|-------------|
+| `Donors` | Stores donor profiles with blood group, city, contact |
+| `Blood_Inventory` | Tracks available units per blood group |
+| `Hospital_Requests` | Hospital blood requests with status |
+| `Audit_Log` | Auto-logs every DB operation |
+
+---
+
+## 🔍 Key SQL Queries Demonstrated
+
+1. **CREATE TABLE** — All 3 tables with constraints
+2. **INSERT** — Donors and inventory initialization
+3. **SELECT WHERE** — Check specific blood group stock
+4. **UPDATE** — Inventory after donation/issue
+5. **JOIN** — Final summary report
+6. **TRIGGER** — Auto audit log on inventory change
+
+---
+
+## 🚀 Features
+
+- ✅ Real-time inventory bars with color coding
+- ✅ Live SQL query display with syntax highlighting
+- ✅ Step-by-step simulation (11 scenarios)
+- ✅ Hospital request tracking
+- ✅ Donor registry with avatars
+- ✅ Critical stock alerts (< 5 units)
+- ✅ Chart.js inventory overview
+- ✅ Audit log for all operations
+- ✅ SQLite database (no external DB needed)
+
+---
+
+## 📊 Presentation Tips
+
+1. Run `python app.py` before class
+2. Open `http://127.0.0.1:5000` on projector
+3. Click **START** — pauses naturally between steps
+4. Explain each SQL query as it appears
+5. Click **Reset** to demo again
+
+---
+
+*Developed for DBMS Semester Project*

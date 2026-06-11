@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Bank Management System — Live Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #181c27;
+    --bg3: #1e2334;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8eaf0;
+    --text2: #8a90a4;
+    --text3: #555c72;
+    --red: #e24b4a;
+    --green: #1d9e75;
+    --blue: #378add;
+    --amber: #ba7517;
+    --purple: #7f77dd;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* Header */
+  .header {
+    background: var(--bg2);
+    border-bottom: 0.5px solid var(--border);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #e24b4a, #a32d2d);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: #fff;
+  }
+  .header-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .header-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .live-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(226,75,74,0.12); border: 0.5px solid rgba(226,75,74,0.3);
+    color: var(--red); font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px;
+  }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  select, button {
+    background: var(--bg3); border: 0.5px solid var(--border2);
+    color: var(--text); font-family: var(--font); font-size: 12px;
+    padding: 7px 12px; border-radius: var(--radius-sm); cursor: pointer;
+    transition: background 0.2s;
+  }
+  select:hover, button:hover { background: rgba(255,255,255,0.07); }
+  button:active { transform: scale(0.97); }
+  button i { vertical-align: -2px; margin-right: 4px; }
+
+  /* Main layout */
+  .main { padding: 20px 28px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* Step pills */
+  .steps-bar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .step-pill {
+    font-size: 11px; padding: 4px 11px; border-radius: 20px;
+    border: 0.5px solid var(--border2); color: var(--text3);
+    transition: all 0.35s ease; white-space: nowrap;
+  }
+  .step-pill.active {
+    background: rgba(55,138,221,0.15); border-color: rgba(55,138,221,0.4);
+    color: var(--blue); font-weight: 500;
+  }
+  .step-pill.done {
+    background: rgba(29,158,117,0.12); border-color: rgba(29,158,117,0.3);
+    color: var(--green);
+  }
+
+  /* Metrics */
+  .metrics-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+  .metric {
+    background: var(--bg2); border: 0.5px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px;
+    transition: border-color 0.3s;
+  }
+  .metric:hover { border-color: var(--border2); }
+  .metric-label { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
+  .metric-value { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1; }
+  .metric-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+  .metric.red .metric-value { color: var(--red); }
+  .metric.green .metric-value { color: var(--green); }
+  .metric.blue .metric-value { color: var(--blue); }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* Card */
+  .card {
+    background: var(--bg2); border: 0.5px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+  }
+  .card-title {
+    font-size: 12px; font-weight: 500; color: var(--text2);
+    display: flex; align-items: center; gap: 6px; margin-bottom: 14px;
+    text-transform: uppercase; letter-spacing: 0.6px;
+  }
+  .card-title i { font-size: 15px; }
+
+  /* Inventory bars */
+  .blood-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .blood-label { font-size: 12px; font-weight: 600; color: var(--text); width: 34px; }
+  .bar-track {
+    flex: 1; background: rgba(255,255,255,0.05);
+    border-radius: 4px; height: 20px; overflow: hidden; position: relative;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 4px;
+    transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+    display: flex; align-items: center; padding-left: 7px;
+    font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.85);
+  }
+  .bar-count { font-size: 11px; color: var(--text2); width: 52px; text-align: right; }
+  .critical-warn { color: var(--red); }
+
+  /* SQL box */
+  .sql-box {
+    background: #0d1117; border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm); padding: 12px 14px;
+    font-family: var(--mono); font-size: 12px; color: #8b949e;
+    line-height: 1.8; min-height: 120px; border-left: 3px solid var(--blue);
+    white-space: pre-wrap; word-break: break-word;
+    transition: all 0.3s ease;
+  }
+  .kw { color: #ff7b72; }
+  .str { color: #79c0ff; }
+  .num { color: #f2cc60; }
+  .cmt { color: #3d8b3d; }
+
+  /* Log */
+  .log-area { max-height: 220px; overflow-y: auto; }
+  .log-area::-webkit-scrollbar { width: 4px; }
+  .log-area::-webkit-scrollbar-track { background: transparent; }
+  .log-area::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+  .log-entry {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 7px 0; border-bottom: 0.5px solid var(--border);
+    animation: slideIn 0.35s ease;
+  }
+  .log-entry:last-child { border-bottom: none; }
+  @keyframes slideIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+  .log-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .log-dot.donate { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .log-dot.issue { background: var(--red); box-shadow: 0 0 6px var(--red); }
+  .log-dot.request { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+  .log-dot.info { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+  .log-text { font-size: 12px; color: var(--text); line-height: 1.4; }
+  .log-time { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+  /* Requests */
+  .req-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0; border-bottom: 0.5px solid var(--border);
+  }
+  .req-item:last-child { border-bottom: none; }
+  .req-hospital { font-size: 12px; font-weight: 500; color: var(--text); }
+  .req-detail { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .badge {
+    font-size: 10px; font-weight: 600; padding: 3px 9px;
+    border-radius: 20px; letter-spacing: 0.4px;
+  }
+  .badge.pending { background: rgba(186,117,23,0.15); color: #f0b429; border: 0.5px solid rgba(186,117,23,0.3); }
+  .badge.fulfilled { background: rgba(29,158,117,0.15); color: var(--green); border: 0.5px solid rgba(29,158,117,0.3); }
+  .badge.rejected { background: rgba(226,75,74,0.15); color: var(--red); border: 0.5px solid rgba(226,75,74,0.3); }
+
+  /* Footer */
+  .footer {
+    padding: 14px 28px; border-top: 0.5px solid var(--border);
+    font-size: 11px; color: var(--text3); display: flex;
+    align-items: center; justify-content: space-between;
+  }
+
+  @media (max-width: 800px) {
+    .main { padding: 14px; }
+    .metrics-row { grid-template-columns: repeat(2,1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .header { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo-icon"><i class="ti ti-drop-filled"></i></div>
+    <div>
+      <div class="header-title">Blood Bank Management System</div>
+      <div class="header-sub">Semester Project — DBMS Live Simulation</div>
+    </div>
+  </div>
+  <div class="live-pill"><div class="live-dot"></div> LIVE</div>
+  <div class="header-right">
+    <select id="speedSel">
+      <option value="2000">Normal speed</option>
+      <option value="1000">Fast</option>
+      <option value="500">Very Fast</option>
+    </select>
+    <button id="pauseBtn"><i class="ti ti-player-pause"></i>Pause</button>
+    <button id="resetBtn"><i class="ti ti-refresh"></i>Reset</button>
+  </div>
+</div>
+
+<div class="main">
+  <!-- Step pills -->
+  <div class="steps-bar" id="stepPills"></div>
+
+  <!-- Metrics -->
+  <div class="metrics-row">
+    <div class="metric green">
+      <div class="metric-label"><i class="ti ti-users"></i> Total Donors</div>
+      <div class="metric-value" id="metDonors">0</div>
+      <div class="metric-sub">registered donors</div>
+    </div>
+    <div class="metric blue">
+      <div class="metric-label"><i class="ti ti-drop"></i> Total Units</div>
+      <div class="metric-value" id="metUnits">0</div>
+      <div class="metric-sub">in inventory</div>
+    </div>
+    <div class="metric red">
+      <div class="metric-label"><i class="ti ti-alert-triangle"></i> Critical Stock</div>
+      <div class="metric-value" id="metCritical">0</div>
+      <div class="metric-sub">groups below 5 units</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label"><i class="ti ti-building-hospital"></i> Requests</div>
+      <div class="metric-value" id="metRequests">0</div>
+      <div class="metric-sub">hospital requests</div>
+    </div>
+  </div>
+
+  <!-- Row 1 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-bar"></i> Blood Inventory</div>
+      <div id="inventoryBars"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-terminal-2"></i> Active SQL Query</div>
+      <div class="sql-box" id="sqlBox">-- Waiting for simulation to start...</div>
+    </div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-list-details"></i> Activity Log</div>
+      <div class="log-area" id="logArea">
+        <div style="font-size:12px;color:var(--text3);padding:8px 0">Simulation starting...</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-building-hospital"></i> Hospital Requests</div>
+      <div id="requestList">
+        <div style="font-size:12px;color:var(--text3);padding:8px 0">No requests yet</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Blood Bank Management System &mdash; DBMS Semester Project</span>
+  <span id="footerStep">Step 0 / 11</span>
+</div>
+
+<script>
+const BLOOD_GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+const BAR_COLORS = {
+  'A+':'#D85A30','A-':'#E24B4A','B+':'#378ADD','B-':'#185FA5',
+  'AB+':'#1D9E75','AB-':'#0F6E56','O+':'#BA7517','O-':'#7F77DD'
+};
+
+let inventory = { 'A+':10,'A-':4,'B+':7,'B-':2,'AB+':5,'AB-':1,'O+':15,'O-':3 };
+let donors = [], requests = [], stepIndex = 0, paused = false, simTimer = null;
+
+const STEPS = [
+  'Tables created','Inventory initialized','Donors registered',
+  'Query: check stock','Donation received','Inventory updated',
+  'Hospital request','Blood issued','Critical alert',
+  'Status updated','Simulation complete'
+];
+
+const SCENARIOS = [
+  {
+    action() {
+      sql(`<span class="kw">CREATE TABLE</span> Donors (\n  donor_id   <span class="str">INT PRIMARY KEY AUTO_INCREMENT</span>,\n  name       <span class="str">VARCHAR(100)</span>,\n  blood_group <span class="str">ENUM</span>(<span class="str">'A+','A-','B+','B-','AB+','AB-','O+','O-'</span>)\n);\n<span class="kw">CREATE TABLE</span> Blood_Inventory (blood_group <span class="str">ENUM</span>(...), units_available <span class="str">INT</span>);\n<span class="kw">CREATE TABLE</span> Hospital_Requests (hospital_name <span class="str">VARCHAR(150)</span>, status <span class="str">ENUM</span>(...));`);
+      log('info','3 tables created: Donors, Blood_Inventory, Hospital_Requests');
+    }
+  },
+  {
+    action() {
+      sql(`<span class="kw">INSERT INTO</span> Blood_Inventory (blood_group, units_available)\n<span class="kw">VALUES</span>\n  (<span class="str">'A+'</span>, <span class="num">10</span>), (<span class="str">'A-'</span>, <span class="num">4</span>), (<span class="str">'B+'</span>, <span class="num">7</span>), (<span class="str">'B-'</span>, <span class="num">2</span>),\n  (<span class="str">'AB+'</span>, <span class="num">5</span>), (<span class="str">'AB-'</span>, <span class="num">1</span>), (<span class="str">'O+'</span>, <span class="num">15</span>), (<span class="str">'O-'</span>, <span class="num">3</span>);\n\n<span class="cmt">-- 8 rows inserted ✓</span>`);
+      log('info','Initial inventory inserted for all 8 blood groups');
+      renderBars();
+    }
+  },
+  {
+    action() {
+      donors.push({name:'Ali Hassan',bg:'B+'},{name:'Sara Khan',bg:'A+'},{name:'Usman Tariq',bg:'O+'});
+      sql(`<span class="kw">INSERT INTO</span> Donors (name, blood_group, last_donation)\n<span class="kw">VALUES</span>\n  (<span class="str">'Ali Hassan'</span>, <span class="str">'B+'</span>, <span class="str">'2024-03-01'</span>),\n  (<span class="str">'Sara Khan'</span>, <span class="str">'A+'</span>, <span class="str">'2024-02-15'</span>),\n  (<span class="str">'Usman Tariq'</span>, <span class="str">'O+'</span>, <span class="str">'2024-01-20'</span>);\n\n<span class="cmt">-- 3 rows inserted ✓</span>`);
+      log('info','3 donors registered: Ali Hassan (B+), Sara Khan (A+), Usman Tariq (O+)');
+      updateMetrics();
+    }
+  },
+  {
+    action() {
+      sql(`<span class="kw">SELECT</span> blood_group, units_available\n<span class="kw">FROM</span> Blood_Inventory\n<span class="kw">WHERE</span> blood_group = <span class="str">'B+'</span>;\n\n<span class="cmt">-- Result:</span>\n<span class="cmt">-- blood_group | units_available</span>\n<span class="cmt">-- B+          | 7</span>`);
+      log('info','Query executed — B+ has 7 units available');
+    }
+  },
+  {
+    action() {
+      donors.push({name:'Hamza Malik',bg:'AB-'});
+      sql(`<span class="kw">INSERT INTO</span> Donors (name, blood_group, last_donation)\n<span class="kw">VALUES</span> (<span class="str">'Hamza Malik'</span>, <span class="str">'AB-'</span>, CURDATE());\n\n<span class="cmt">-- Trigger fires: after_donation</span>\n<span class="cmt">-- → UPDATE Blood_Inventory SET units += 2 WHERE blood_group='AB-'</span>`);
+      log('donate','New donation — Hamza Malik donated AB- blood (trigger auto-fired)');
+      updateMetrics();
+    }
+  },
+  {
+    action() {
+      inventory['AB-'] += 2;
+      sql(`<span class="kw">UPDATE</span> Blood_Inventory\n<span class="kw">SET</span> units_available = units_available + <span class="num">2</span>\n<span class="kw">WHERE</span> blood_group = <span class="str">'AB-'</span>;\n\n<span class="cmt">-- AB- units: 1 → 3  ✓</span>`);
+      log('donate','Inventory updated — AB- increased from 1 → 3 units');
+      renderBars(); updateMetrics();
+    }
+  },
+  {
+    action() {
+      requests.push({hospital:'Ayub Medical Center',bg:'B+',units:3,status:'Pending'});
+      sql(`<span class="kw">INSERT INTO</span> Hospital_Requests\n  (hospital_name, blood_group, units_needed, status)\n<span class="kw">VALUES</span>\n  (<span class="str">'Ayub Medical Center'</span>, <span class="str">'B+'</span>, <span class="num">3</span>, <span class="str">'Pending'</span>);\n\n<span class="cmt">-- Request ID: 1 created ✓</span>`);
+      log('request','Hospital request — Ayub Medical Center needs 3 units of B+');
+      renderRequests(); updateMetrics();
+    }
+  },
+  {
+    action() {
+      inventory['B+'] -= 3;
+      requests[0].status = 'Fulfilled';
+      sql(`<span class="kw">UPDATE</span> Blood_Inventory\n<span class="kw">SET</span> units_available = units_available - <span class="num">3</span>\n<span class="kw">WHERE</span> blood_group = <span class="str">'B+'</span>;\n\n<span class="kw">UPDATE</span> Hospital_Requests\n<span class="kw">SET</span> status = <span class="str">'Fulfilled'</span>\n<span class="kw">WHERE</span> request_id = <span class="num">1</span>;\n\n<span class="cmt">-- B+ units: 7 → 4  ✓</span>`);
+      log('issue','Blood issued — 3 units B+ sent to Ayub Medical Center');
+      renderBars(); renderRequests(); updateMetrics();
+    }
+  },
+  {
+    action() {
+      inventory['O-'] -= 2;
+      requests.push({hospital:'KMC Hospital',bg:'O-',units:2,status:'Pending'});
+      sql(`<span class="kw">SELECT</span> blood_group, units_available\n<span class="kw">FROM</span> Blood_Inventory\n<span class="kw">WHERE</span> units_available < <span class="num">5</span>\n<span class="kw">ORDER BY</span> units_available <span class="kw">ASC</span>;\n\n<span class="cmt">-- ⚠ Critical groups: AB-, B-, O-, A-</span>\n<span class="cmt">-- These need urgent donor campaigns!</span>`);
+      log('issue','⚠ Critical alert — 4 blood groups below 5 units threshold!');
+      renderBars(); renderRequests(); updateMetrics();
+    }
+  },
+  {
+    action() {
+      requests[1].status = 'Fulfilled';
+      inventory['A-'] -= 1;
+      sql(`<span class="kw">UPDATE</span> Hospital_Requests\n<span class="kw">SET</span> status = <span class="str">'Fulfilled'</span>\n<span class="kw">WHERE</span> request_id = <span class="num">2</span>;\n\n<span class="kw">UPDATE</span> Blood_Inventory\n<span class="kw">SET</span> units_available = units_available - <span class="num">2</span>\n<span class="kw">WHERE</span> blood_group = <span class="str">'O-'</span>;\n\n<span class="cmt">-- All pending requests resolved ✓</span>`);
+      log('info','KMC request fulfilled — O- issued, all statuses updated');
+      renderRequests(); renderBars(); updateMetrics();
+    }
+  },
+  {
+    action() {
+      sql(`<span class="kw">SELECT</span> d.name, d.blood_group, d.last_donation\n<span class="kw">FROM</span> Donors d\n<span class="kw">WHERE</span> d.last_donation >= DATE_SUB(CURDATE(), INTERVAL <span class="num">3</span> MONTH)\n<span class="kw">ORDER BY</span> last_donation <span class="kw">DESC</span>;\n\n<span class="cmt">-- ✓ Simulation complete</span>\n<span class="cmt">-- All DBMS operations demonstrated successfully!</span>`);
+      log('info','✓ Simulation complete — all scenarios demonstrated!');
+      paused = true;
+      document.getElementById('pauseBtn').innerHTML = '<i class="ti ti-player-play"></i>Resume';
+    }
+  }
+];
+
+function sql(html) { document.getElementById('sqlBox').innerHTML = html; }
+
+function log(type, text) {
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-PK',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const area = document.getElementById('logArea');
+  const el = document.createElement('div');
+  el.className = 'log-entry';
+  el.innerHTML = `<div class="log-dot ${type}"></div><div><div class="log-text">${text}</div><div class="log-time">${time}</div></div>`;
+  if (area.firstChild && area.firstChild.textContent === 'Simulation starting...') area.innerHTML = '';
+  area.insertBefore(el, area.firstChild);
+}
+
+function renderBars() {
+  document.getElementById('inventoryBars').innerHTML = BLOOD_GROUPS.map(bg => {
+    const u = Math.max(0, inventory[bg] || 0);
+    const pct = Math.min(100, Math.round((u / 20) * 100));
+    const crit = u < 5;
+    return `<div class="blood-row">
+      <div class="blood-label">${bg}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${BAR_COLORS[bg]}">${u > 2 ? u + ' u' : ''}</div>
+      </div>
+      <div class="bar-count ${crit ? 'critical-warn' : ''}">${u} unit${u !== 1 ? 's' : ''}${crit ? ' ⚠' : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderRequests() {
+  const el = document.getElementById('requestList');
+  if (!requests.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px 0">No requests yet</div>';
+    return;
+  }
+  el.innerHTML = requests.map(r => `
+    <div class="req-item">
+      <div>
+        <div class="req-hospital">${r.hospital}</div>
+        <div class="req-detail">${r.units} units of ${r.bg}</div>
+      </div>
+      <span class="badge ${r.status.toLowerCase()}">${r.status}</span>
+    </div>`).join('');
+}
+
+function updateMetrics() {
+  document.getElementById('metDonors').textContent = donors.length;
+  document.getElementById('metUnits').textContent = Object.values(inventory).reduce((a,b) => a + Math.max(0,b), 0);
+  document.getElementById('metCritical').textContent = Object.values(inventory).filter(v => v < 5).length;
+  document.getElementById('metRequests').textContent = requests.length;
+}
+
+function renderPills() {
+  document.getElementById('stepPills').innerHTML = STEPS.map((s, i) => {
+    let cls = 'step-pill';
+    if (i < stepIndex) cls += ' done';
+    else if (i === stepIndex) cls += ' active';
+    const icon = i < stepIndex ? '✓ ' : (i === stepIndex ? '▶ ' : '');
+    return `<div class="${cls}">${icon}${s}</div>`;
+  }).join('');
+  document.getElementById('footerStep').textContent = `Step ${stepIndex} / ${STEPS.length}`;
+}
+
+function runStep() {
+  if (stepIndex >= SCENARIOS.length) return;
+  SCENARIOS[stepIndex].action();
+  renderPills();
+  stepIndex++;
+  document.getElementById('footerStep').textContent = `Step ${stepIndex} / ${STEPS.length}`;
+}
+
+function startSim() {
+  clearInterval(simTimer);
+  const speed = parseInt(document.getElementById('speedSel').value);
+  simTimer = setInterval(() => {
+    if (!paused && stepIndex < SCENARIOS.length) runStep();
+    if (stepIndex >= SCENARIOS.length) clearInterval(simTimer);
+  }, speed);
+}
+
+document.getElementById('pauseBtn').addEventListener('click', () => {
+  paused = !paused;
+  document.getElementById('pauseBtn').innerHTML = paused
+    ? '<i class="ti ti-player-play"></i>Resume'
+    : '<i class="ti ti-player-pause"></i>Pause';
+  if (!paused) startSim();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  clearInterval(simTimer);
+  inventory = { 'A+':10,'A-':4,'B+':7,'B-':2,'AB+':5,'AB-':1,'O+':15,'O-':3 };
+  donors = []; requests = []; stepIndex = 0; paused = false;
+  document.getElementById('logArea').innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px 0">Simulation starting...</div>';
+  document.getElementById('requestList').innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px 0">No requests yet</div>';
+  sql('-- Waiting for simulation to start...');
+  document.getElementById('pauseBtn').innerHTML = '<i class="ti ti-player-pause"></i>Pause';
+  renderBars(); renderPills(); updateMetrics();
+  startSim();
+});
+
+document.getElementById('speedSel').addEventListener('change', () => { if (!paused) startSim(); });
+
+renderBars(); renderRequests(); renderPills(); updateMetrics();
+startSim();
+</script>
+</body>
+</html>
