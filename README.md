@@ -14,19 +14,17 @@ bloodbank/
 └── README.md
 ```
 
----
-
-## ⚙️ Setup & Run
+##  Setup & Run
 
 ### Step 1 — Install Python dependencies
-```bash
+
 pip install flask
-```
+
 
 ### Step 2 — Run the server
-```bash
+
 python app.py
-```
+
 
 ### Step 3 — Open in browser
 ```
@@ -36,9 +34,9 @@ http://127.0.0.1:5000
 ### Step 4 — Click START
 The simulation runs automatically, step by step!
 
----
 
-## 🗂️ Database Tables
+
+##  Database Tables
 
 | Table | Description |
 |-------|-------------|
