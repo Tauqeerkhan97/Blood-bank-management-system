@@ -3,7 +3,7 @@
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 bloodbank/
@@ -47,7 +47,7 @@ The simulation runs automatically, step by step!
 
 ---
 
-## 🔍 Key SQL Queries Demonstrated
+##  Key SQL Queries Demonstrated
 
 1. **CREATE TABLE** — All 3 tables with constraints
 2. **INSERT** — Donors and inventory initialization
@@ -55,10 +55,8 @@ The simulation runs automatically, step by step!
 4. **UPDATE** — Inventory after donation/issue
 5. **JOIN** — Final summary report
 6. **TRIGGER** — Auto audit log on inventory change
-
 ---
-
-## 🚀 Features
+##  Features
 
 - ✅ Real-time inventory bars with color coding
 - ✅ Live SQL query display with syntax highlighting
@@ -69,17 +67,13 @@ The simulation runs automatically, step by step!
 - ✅ Chart.js inventory overview
 - ✅ Audit log for all operations
 - ✅ SQLite database (no external DB needed)
-
 ---
-
-## 📊 Presentation Tips
+##  Presentation Tips
 
 1. Run `python app.py` before class
 2. Open `http://127.0.0.1:5000` on projector
 3. Click **START** — pauses naturally between steps
 4. Explain each SQL query as it appears
 5. Click **Reset** to demo again
-
 ---
-
 *Developed for DBMS Semester Project*
