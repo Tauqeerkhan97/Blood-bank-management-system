@@ -57,15 +57,15 @@ The simulation runs automatically, step by step!
 ---
 ##  Features
 
-- ✅ Real-time inventory bars with color coding
-- ✅ Live SQL query display with syntax highlighting
-- ✅ Step-by-step simulation (11 scenarios)
-- ✅ Hospital request tracking
-- ✅ Donor registry with avatars
-- ✅ Critical stock alerts (< 5 units)
-- ✅ Chart.js inventory overview
-- ✅ Audit log for all operations
-- ✅ SQLite database (no external DB needed)
+-  Real-time inventory bars with color coding
+-  Live SQL query display with syntax highlighting
+-  Step-by-step simulation (11 scenarios)
+-  Hospital request tracking
+-  Donor registry with avatars
+-  Critical stock alerts (< 5 units)
+-  Chart.js inventory overview
+-  Audit log for all operations
+-  SQLite database (no external DB needed)
 ---
 ##  Presentation Tips
 
@@ -76,3 +76,4 @@ The simulation runs automatically, step by step!
 5. Click **Reset** to demo again
 ---
 *Developed for DBMS Semester Project*
+*Arthur Tauqeerkhan97*
