@@ -1,6 +1,5 @@
 # 🩸 Blood Bank Management System
 ### DBMS Semester Project — Python + Flask + SQLite + Real-Time Visualization
-
 ---
 
 ##  Project Structure
@@ -23,9 +22,9 @@ pip install flask
 
 ### Step 2 — Run the server
 
+---
 python app.py
-
-
+---
 ### Step 3 — Open in browser
 ```
 http://127.0.0.1:5000
