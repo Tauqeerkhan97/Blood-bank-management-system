@@ -76,4 +76,7 @@ The simulation runs automatically, step by step!
 5. Click **Reset** to demo again
 ---
 *Developed for DBMS Semester Project*
+
+____
 *Arthur Tauqeerkhan97*
+____
