@@ -75,7 +75,6 @@ The simulation runs automatically, step by step!
 4. Explain each SQL query as it appears
 5. Click **Reset** to demo again
 
-hello
 ---
 ____
 *Arthur Tauqeerkhan97*
